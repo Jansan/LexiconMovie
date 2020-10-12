@@ -24,6 +24,20 @@ namespace LexiconMovie.Controllers
         {
             return View(await _context.Movie.ToListAsync());
         }
+        // Filter
+        public async Task<IActionResult> Filter(string title, int? genre)
+        {
+            var model = string.IsNullOrWhiteSpace(title) ?
+                _context.Movie :
+                _context.Movie.Where(m => m.Title.StartsWith(title));
+
+            model = genre == null ?
+                model :
+                model.Where(m => m.Genre == (Genre)genre);
+
+            return View(nameof(Index), await model.ToListAsync());
+        }
+
 
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
